@@ -1,0 +1,68 @@
+# Import the necessary libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.model_selection import train_test_split
+from sklearn.linear_regression import LinearRegression
+from sklearn.metrics import r2_score
+
+# Load the dataset
+data = pd.read_csv('dataset.csv')
+
+# Explore the dataset
+print("First 5 rows of the dataset:")
+print(data.head())
+
+print("\nInformation about the dataset:")
+print(data.info())
+
+# Clean and preprocess the data
+# Handle missing values
+print("\nNumber of missing values in each column:")
+print(data.isnull().sum())
+
+data = data.dropna()
+
+# Handle outliers
+z = np.abs(stats.zscore(data))
+data = data[(z < 3).all(axis=1)]
+
+# Encode categorical variables
+print("\nEncoding categorical variables:")
+from sklearn.preprocessing import LabelEncoder
+le = LabelEncoder()
+data['categorical_feature'] = le.fit_transform(data['categorical_feature'])
+
+# Visualize the data
+print("\nVisualize the data:")
+sns.pairplot(data)
+plt.show()
+
+# Split the data into training and testing sets
+X = data.drop('target_variable', axis=1)
+y = data['target_variable']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+print("\nShape of the training and testing sets:")
+print(f"X_train: {X_train.shape}")
+print(f"y_train: {y_train.shape}")
+print(f"X_test: {X_test.shape}")
+print(f"y_test: {y_test.shape}")
+
+# Train a linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+# Evaluate the model
+print("\nEvaluate the model:")
+train_score = model.score(X_train, y_train)
+test_score = model.score(X_test, y_test)
+print(f"R-squared score (train): {train_score:.2f}")
+print(f"R-squared score (test): {test_score:.2f}")
+
+# Use the model to make predictions on new data
+print("\nMake predictions on new data:")
+new_data = pd.DataFrame({'feature1': [10, 20, 30], 'feature2': [5, 10, 15]})
+predictions = model.predict(new_data)
+print('Predictions:', predictions)
